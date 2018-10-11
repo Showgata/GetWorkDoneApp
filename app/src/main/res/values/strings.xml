@@ -1,0 +1,13 @@
+<resources>
+
+    <string name="app_name">ToDo List</string>
+    <string name="dummy_name">Showgata Chakraborty</string>
+    <string name="today">Today</string>
+    <string name="tuesday_9_october">Tuesday,9 October</string>
+    <string name="dummy_text_dm">Daily Meeting</string>
+    <string name="add_new_todo">Add New Todo</string>
+    <string name="type_the_thing_you_want_to_do_here">Type the thing you want to do here</string>
+    <string name="additional_description">Additional Description</string>
+    <string name="tap_to_add_todo">No Work Today\nTap + to Add Todo</string>
+
+</resources>
