@@ -25,7 +25,7 @@ public class IntroActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent t = new Intent(IntroActivity.this,NoteListActivity.class);
+                Intent t = new Intent(IntroActivity.this,TodoListActivity.class);
                 startActivity(t);
                 overridePendingTransition(R.anim.anim_move_down,R.anim.anim_move_up);
                 finish();

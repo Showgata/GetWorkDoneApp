@@ -7,24 +7,20 @@ import android.os.Build;
 import java.text.DateFormat;
 import java.text.ParseException;
 
+import java.util.Calendar;
 import java.util.Date;
 
 
 public class TimeStampInfo {
 
-    static DateFormat df= DateFormat.getDateInstance();
+    @TypeConverter
+    public static Date fromTimestamp(Long value) {
+        return value == null ? null : new Date(value);
+    }
 
     @TypeConverter
-    public static Date getDate(String value) {
-
-        if (value != null) {
-            try {
-                return df.parse(value);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
+    public static Long dateToTimestamp(Date date) {
+        return date == null ? null : date.getTime();
     }
 
 

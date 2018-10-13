@@ -24,7 +24,6 @@ public class TimePickerFragment extends DialogFragment {
         int min =c.get(Calendar.MINUTE);
 
 
-
         return new TimePickerDialog(getActivity(), (TimePickerDialog.OnTimeSetListener) AddTodo.newInstance()
                 ,hour,min, DateFormat.is24HourFormat(getActivity()));
     }

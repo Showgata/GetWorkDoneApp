@@ -11,26 +11,25 @@
 
     <TextView
         android:id="@+id/title"
+        style="@style/BigTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
+        android:background="@android:color/transparent"
         android:text="@string/add_new_todo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        style="@style/BigTextStyle"
-        android:background="@android:color/transparent"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/todoTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="32dp"
         android:background="@android:color/transparent"
         android:ems="10"
         android:hint="@string/type_the_thing_you_want_to_do_here"
@@ -43,8 +42,7 @@
     <EditText
         android:id="@+id/todoDesc"
         android:layout_width="0dp"
-        android:layout_height="100dp"
-        android:layout_marginBottom="8dp"
+        android:layout_height="150dp"
         android:layout_marginTop="24dp"
         android:background="@android:color/transparent"
         android:ems="10"
@@ -53,11 +51,9 @@
         android:inputType="textMultiLine"
         android:maxHeight="100dp"
         android:minHeight="100dp"
-        app:layout_constraintBottom_toTopOf="@+id/cancelBtn"
         app:layout_constraintEnd_toEndOf="@+id/todoTitle"
         app:layout_constraintStart_toStartOf="@+id/todoTitle"
-        app:layout_constraintTop_toBottomOf="@+id/todoTitle"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/todoTitle" />
 
     <Button
         android:id="@+id/cancelBtn"
@@ -83,16 +79,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:background="@drawable/button_border"/>
 
-    <ImageButton
+    <Button
         android:id="@+id/timePicker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="8dp"
         android:backgroundTint="@color/colorPrimaryDark"
+        android:drawableLeft="@drawable/ic_timer"
+        android:drawablePadding="8dp"
+        android:text="@string/set_alarm"
+        android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="@+id/title"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/title"
-        app:srcCompat="@drawable/ic_timer" />
+        app:layout_constraintEnd_toEndOf="@+id/todoTitle"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/title"
+        app:layout_constraintTop_toTopOf="@+id/title" />
 
     <TextView
         android:id="@+id/timePicked_textview"
@@ -101,7 +102,6 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
-        android:text="Hello"
         android:gravity="center_vertical"
         android:textColor="@android:color/darker_gray"
         android:textSize="12sp"
@@ -111,4 +111,17 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/todoDesc"
         app:layout_constraintTop_toTopOf="@+id/cancelBtn" />
+
+    <CheckBox
+        android:id="@+id/daily_cb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Notify Me Daily"
+        style="@style/AppTheme"
+        app:layout_constraintBottom_toTopOf="@+id/cancelBtn"
+        app:layout_constraintStart_toStartOf="@+id/todoDesc"
+        app:layout_constraintTop_toBottomOf="@+id/todoDesc" />
+
 </android.support.constraint.ConstraintLayout>

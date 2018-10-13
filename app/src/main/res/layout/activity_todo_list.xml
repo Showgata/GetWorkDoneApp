@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".NoteListActivity"
+    tools:context=".TodoListActivity"
     android:background="@color/colorPrimaryDark"
     android:padding="16dp"
     style="@style/AppTheme">
@@ -40,7 +40,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/listOftodos"
-            tools:listitem="@layout/custom_checker">
+            tools:listitem="@layout/custom_checker"
+            android:layoutAnimation="@anim/layout_fall_down_anim">
 
         </android.support.v7.widget.RecyclerView>
     </RelativeLayout>

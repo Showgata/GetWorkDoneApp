@@ -45,7 +45,7 @@
         app:srcCompat="@drawable/ic_add" />
 
     <ImageButton
-        android:id="@+id/show_all_todo_btn"
+        android:id="@+id/delete_all_todo_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
@@ -53,7 +53,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/add_todo_btn"
         app:layout_constraintEnd_toStartOf="@+id/add_todo_btn"
         app:layout_constraintTop_toTopOf="@+id/add_todo_btn"
-        app:srcCompat="@drawable/ic_event_note_black_24dp" />
+        app:srcCompat="@drawable/ic_delete" />
 
 
 </android.support.constraint.ConstraintLayout>
