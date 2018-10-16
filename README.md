@@ -8,4 +8,4 @@ particular todos.
 //This application follows the MVVM architecture pattern
 
 //It uses Room persistence library which provides
-a abstraction layer over SQL Database
+an abstraction layer over SQL Database
