@@ -6,6 +6,7 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -35,7 +36,6 @@ public class TodoListActivity extends AppCompatActivity {
     private TextView dateTv;
     private ToDoListAdapter adapter;
     private List<Todos> todos =new ArrayList<>();
-
     private NotificationManagerCompat managerCompat;
 
 
@@ -68,22 +68,35 @@ public class TodoListActivity extends AppCompatActivity {
         deleteAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                todoViewModel.deleteAll();
-                cancelAllRemainder(todos);
+
+                if(!todos.isEmpty()) {
+
+                    SharedPreferences sp = getSharedPreferences(ToDoListAdapter.PREFS_ID, Context.MODE_PRIVATE);
+                    sp.edit().clear().commit();
+
+                    alertDialog();
+                    cancelAllRemainder(todos);
+                }
             }
         });
 
         todoViewModel= ViewModelProviders.of(this).get(TodoViewModel.class);
+
+        //LiveData notifies the adapter if content is changed
         todoViewModel.getAllTodos().observe(this, new Observer<List<Todos>>() {
             @Override
             public void onChanged(@Nullable List<Todos> todos) {
-                showNoneTextIfListisEmpty(todos);
+
+                TodoListActivity.this.todos = todos;
+                showAddTextIfListisEmpty(todos);
                 adapter.setTodoList(todos);
-                TodoListActivity.this.todos=todos;
+
             }
         });
 
 
+
+        //Implementation of Swipe to delete todos
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
                 ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
@@ -101,19 +114,17 @@ public class TodoListActivity extends AppCompatActivity {
                     AddTodo.cancelRemainder(TodoListActivity.this,t.getAlarmUniqueId());
 
                 todoViewModel.delete(t);
+
+                SharedPreferences sp = getSharedPreferences(ToDoListAdapter.PREFS_ID,Context.MODE_PRIVATE);
+                sp.edit().remove(t.getTodoTitle()).commit();
                 Toast.makeText(TodoListActivity.this,"Todo deleted Successfully",Toast.LENGTH_SHORT).show();
             }
         }).attachToRecyclerView(rvListOfTodos);
     }
 
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-    }
-
-    public void showNoneTextIfListisEmpty(List<Todos> listOfTodos)
+    //When the recycleview is empty ,show Tap + to Add todos text
+    public void showAddTextIfListisEmpty(List<Todos> listOfTodos)
     {
         if(listOfTodos==null || listOfTodos.isEmpty())
         {
@@ -126,14 +137,19 @@ public class TodoListActivity extends AppCompatActivity {
             }
     }
 
+    //When + is clicked, addTodo fragment is shown as a dialog
     public void createDialog()
     {
         AddTodo addTodo = AddTodo.newInstance();
-        addTodo.setTodoViewModel(todoViewModel);
-        addTodo.show(getSupportFragmentManager(),"Add Todo !");
+        if(!addTodo.isAdded()) {
+            addTodo.setTodoViewModel(todoViewModel);
+            addTodo.show(getSupportFragmentManager(), "Add Todo !");
+        }
+
 
     }
 
+    //Cancel All Remainder,executed when all todos are deleted
     public void cancelAllRemainder(List<Todos> todos)
     {
         int j=0;
@@ -152,6 +168,17 @@ public class TodoListActivity extends AppCompatActivity {
                 Toast.makeText(this, "Alarm with id " + rc + " is cancelled", Toast.LENGTH_SHORT).show();
             }
             j++;
+        }
+    }
+
+    //Prompts a simply warning msg before deleting all todos
+    public void alertDialog()
+    {
+
+        DeleteAllTodoDialog datd = DeleteAllTodoDialog.newInstance();
+        if(!datd.isAdded()) {
+            datd.setTodoViewModel(todoViewModel);
+            datd.show(getSupportFragmentManager(), "Add Todo !");
         }
     }
 

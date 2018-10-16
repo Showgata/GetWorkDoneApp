@@ -41,7 +41,8 @@
             android:layout_height="match_parent"
             android:id="@+id/listOftodos"
             tools:listitem="@layout/custom_checker"
-            android:layoutAnimation="@anim/layout_fall_down_anim">
+            android:layoutAnimation="@anim/layout_fall_down_anim"
+            android:requiresFadingEdge="horizontal|vertical">
 
         </android.support.v7.widget.RecyclerView>
     </RelativeLayout>

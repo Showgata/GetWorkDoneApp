@@ -14,7 +14,7 @@ import android.os.Bundle;
 public class IntroActivity extends AppCompatActivity {
 
 
-    private final int DELAY_TIME = 5000;
+    private final int DELAY_TIME = 3000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

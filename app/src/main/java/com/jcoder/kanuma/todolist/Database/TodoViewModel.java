@@ -7,6 +7,10 @@ import android.support.annotation.NonNull;
 
 import java.util.List;
 
+
+/*This class connects with activites and fragments
+* and helps when configuration changes
+* */
 public class TodoViewModel extends AndroidViewModel {
 
     private TodoRepository repository;

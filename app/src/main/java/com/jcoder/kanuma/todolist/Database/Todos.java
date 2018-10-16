@@ -4,14 +4,20 @@ package com.jcoder.kanuma.todolist.Database;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
+import android.os.Parcelable;
 
 import com.jcoder.kanuma.todolist.Extras.TimeStampInfo;
 
 import java.util.Calendar;
 import java.util.Date;
 
+/*
+*ENTITIES
+This class contains the columns name of our database
+* */
+
 @Entity(tableName = "todos_table")
-public class Todos {
+public class Todos  {
 
     @PrimaryKey(autoGenerate = true)
     private int id;

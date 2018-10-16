@@ -10,6 +10,8 @@ import com.jcoder.kanuma.todolist.AddTodo;
 
 import java.util.Calendar;
 
+/*Simple Date Picker Fragment*/
+
 public class DatePickerFragment extends DialogFragment {
 
     private Calendar c;
@@ -23,6 +25,9 @@ public class DatePickerFragment extends DialogFragment {
         int month =c.get(Calendar.MONTH);
         int day=c.get(Calendar.DAY_OF_MONTH);
 
-        return new DatePickerDialog(getActivity(), (DatePickerDialog.OnDateSetListener) AddTodo.newInstance(),year,month,day);
+        DatePickerDialog d= new DatePickerDialog(getActivity(), (DatePickerDialog.OnDateSetListener) AddTodo.newInstance(),
+                year,month,day);
+        d.getDatePicker().setMinDate(System.currentTimeMillis()-1000);
+        return d;
     }
 }

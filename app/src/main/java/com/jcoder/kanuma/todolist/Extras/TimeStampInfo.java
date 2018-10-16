@@ -10,7 +10,8 @@ import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 
-
+/*Converts Long value into date object and vice versa.
+* used by room */
 public class TimeStampInfo {
 
     @TypeConverter
@@ -23,16 +24,6 @@ public class TimeStampInfo {
         return date == null ? null : date.getTime();
     }
 
-
-//    public static String getCurrentDate()
-//    {
-//        Date date =new Date();
-//        String dayOfTheWeek = (String) DateFormat.format("EEEE",date);
-//        String day =(String) DateFormat.format("dd",date);
-//        String month = (String) DateFormat.format("MMM",date);
-//
-//        return dayOfTheWeek+","+day+" "+month;
-//    }
 
 
 }

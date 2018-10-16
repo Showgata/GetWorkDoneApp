@@ -7,6 +7,10 @@ import android.util.Log;
 
 import java.util.List;
 
+/*
+* It is just an intermediate class that connects the viewmodel with database
+* */
+
 public class TodoRepository {
 
     private TodoDao todoDao;

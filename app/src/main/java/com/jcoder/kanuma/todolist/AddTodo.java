@@ -38,6 +38,11 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 
+/*
+* A Simple Fragment to add new todo_ in the recycler view
+* */
+
+
 public class AddTodo extends AppCompatDialogFragment implements TimePickerDialog.OnTimeSetListener,DatePickerDialog.OnDateSetListener {
 
     private EditText todoTitle;
@@ -52,9 +57,10 @@ public class AddTodo extends AppCompatDialogFragment implements TimePickerDialog
     private TodoViewModel todoViewModel;
     private static final String TAG = "AddTodo";
     public static final String NOTIFICATION_TITLE="notification title";
-    public static final String NOTIFICATION_DESC="notification desc";
+    public static final String NOTIFICATION_ID="notification ID";
     public static final String BUNDLE_NAME="content bundle";
     private boolean ringDaily=false;
+    private String s;
     /*ringDaily = false means reminder rings only once
         ringDaily =true means reminder rings daily at that time
      */
@@ -82,7 +88,7 @@ public class AddTodo extends AppCompatDialogFragment implements TimePickerDialog
                         .inflate(R.layout.snippet_add_todo,null);
 
 
-
+        //Adding a custom view to the dialog fragment
         builder.setView(view);
 
         todoTitle =view.findViewById(R.id.todoTitle);
@@ -108,7 +114,7 @@ public class AddTodo extends AppCompatDialogFragment implements TimePickerDialog
             }
         });
 
-
+        //opens the default date and time picker fragment for selecting date and time
         timePicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -116,7 +122,7 @@ public class AddTodo extends AppCompatDialogFragment implements TimePickerDialog
             }
         });
 
-
+        //listens if the checkbox is selected or not
         notifyMeDailyCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -125,26 +131,29 @@ public class AddTodo extends AppCompatDialogFragment implements TimePickerDialog
             }
         });
 
-
         return builder.create();
     }
 
     private void validateAndSave()
     {
+        Calendar cal;
         String title = todoTitle.getText().toString().trim();
         String desc= todoDesc.getText().toString().trim();
         Todos todos;
 
+        //checks if the title field is empty or not
         if(TextUtils.isEmpty(title)){
             todoTitle.setError("This field cannot be empty");
             return;
         }else {
-                Calendar cal = Calendar.getInstance();
+                cal = Calendar.getInstance();
                 todos =new Todos(title,desc,cal.getTime());
             }
 
 
-        if(c!=null){
+        //if the date and time is picked,then c will not be null
+        if(c!=null && !c.equals(cal)){
+            //generate a random number as alarm id
             final int random = new Random().nextInt(10000000)+100000;
             todos.setDateRemainder(c.getTime());
             todos.setRingDaily(ringDaily);
@@ -154,6 +163,7 @@ public class AddTodo extends AppCompatDialogFragment implements TimePickerDialog
             c=null;
         }
 
+        //insert the todo_ details in the database
         todoViewModel.insert(todos);
         dismiss();
     }
@@ -163,6 +173,7 @@ public class AddTodo extends AppCompatDialogFragment implements TimePickerDialog
     public void onStart() {
         super.onStart();
 
+        //remove the default background of the dialog fragment
         Window window = getDialog().getWindow();
         window.setBackgroundDrawableResource(android.R.color.transparent);
     }
@@ -170,69 +181,27 @@ public class AddTodo extends AppCompatDialogFragment implements TimePickerDialog
 
     public void openTimePicker()
     {
+        //opens the default time picker fragment
         DialogFragment tp =new TimePickerFragment();
         tp.show(getActivity().getSupportFragmentManager(),"time picker");
     }
 
     public void openDatePicker()
     {
+        //opens the default date picker fragment
         DialogFragment tp =new DatePickerFragment();
         tp.show(getActivity().getSupportFragmentManager(),"date picker");
     }
 
     @Override
-    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-
-
-
-        c.set(Calendar.HOUR_OF_DAY,hourOfDay);
-        c.set(Calendar.MINUTE,minute);
-        c.set(Calendar.SECOND,0);
-
-        String s = checkDate(c,0,2);
-        Log.i(TAG, "onTimeSet: "+c.getTime());
-        timePickerView.setText(s);
-    }
-
-    public static void startRemainder(Calendar c,String todo,int rc,boolean ringDaily,Context context)
-    {
-        AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        Intent i =new Intent(context,AlarmReceiver.class);
-        i.putExtra(NOTIFICATION_TITLE,todo);
-        PendingIntent pdi = PendingIntent.getBroadcast(context,rc,i,0);
-
-        if(!ringDaily) {
-            manager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pdi);
-        }else
-            {
-                manager.setRepeating(AlarmManager.RTC_WAKEUP,c.getTimeInMillis(),AlarmManager.INTERVAL_DAY,pdi);
-            }
-
-    }
-
-
-    public static void cancelRemainder(Context c,int rc)
-    {
-
-        AlarmManager manager = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
-        Intent i =new Intent(c,AlarmReceiver.class);
-        PendingIntent pdi = PendingIntent.getBroadcast(c,rc,i,0);
-
-        manager.cancel(pdi);
-
-        Toast.makeText(c,"Alarm with id "+rc+" is cancelled",Toast.LENGTH_SHORT).show();
-
-    }
-
-
-    @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+
+        //create new calender instance and set the date to it
         c= Calendar.getInstance();
         c.set(Calendar.YEAR,year);
         c.set(Calendar.MONTH,month);
         c.set(Calendar.DAY_OF_MONTH,dayOfMonth);
 
-        view.setMinDate(System.currentTimeMillis()-1000);
 
         Log.i(TAG, "onDateSet: "+c.getTime());
 
@@ -240,21 +209,89 @@ public class AddTodo extends AppCompatDialogFragment implements TimePickerDialog
 
     }
 
+    @Override
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+
+        //set time to the existing calender object
+        c.set(Calendar.HOUR_OF_DAY,hourOfDay);
+        c.set(Calendar.MINUTE,minute);
+        c.set(Calendar.SECOND,0);
+
+        if(c.before(Calendar.getInstance()))
+        {
+            c.set(Calendar.DAY_OF_MONTH,c.get(Calendar.DAY_OF_MONTH)+1);
+        }
+
+
+        s = checkDate(c,0,2,false);
+        Log.i(TAG, "onTimeSet: "+c.getTime());
+
+        //update the textview with the string in s
+        timePickerView.setText(s);
+    }
+
+
+    //creates a new alarm to ring on a particular date and time
+    public static void startRemainder(Calendar c,String todo,int rc,boolean ringDaily,Context context)
+    {
+        AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent i =new Intent(context,AlarmReceiver.class);
+        i.putExtra(NOTIFICATION_TITLE,todo);
+        i.putExtra(NOTIFICATION_ID,rc);
+        PendingIntent pdi = PendingIntent.getBroadcast(context,rc,i,0);
+
+        if(!ringDaily) {
+            manager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pdi);
+        }else
+            {
+                manager.setRepeating(AlarmManager.RTC_WAKEUP,c.getTimeInMillis(),AlarmManager.INTERVAL_DAY,pdi);
+                Toast.makeText(context,"Alarm with ring daily from "+c.getTime(),Toast.LENGTH_LONG).show();
+            }
+
+    }
+
+
+    //cancels the alarm
+    public static void cancelRemainder(Context c,int rc)
+    {
+
+        AlarmManager manager = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
+        Intent i =new Intent(c,AlarmReceiver.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        PendingIntent pdi = PendingIntent.getBroadcast(c,rc,i,0);
+
+        manager.cancel(pdi);
+
+        //Toast.makeText(c,"Alarm with id "+rc+" is cancelled",Toast.LENGTH_SHORT).show();
+
+    }
+
+
+
+
     public static String getProperTag(int i)
     {
-        String[] s={"Remind Me At :\n","Remind Me Daily \n At","Remind Me On \n","Remind Me On ","Remind Me At "};
+        String[] s={"Remind Me At :\n","Remind Me Daily At ","Remind Me On \n","Remind Me On ","Remind Me At "};
         return s[i];
     }
 
-    public static String checkDate(Calendar c,int i1,int i2)
+    /*
+     * checkDate checks the date and shows various strings accordingly
+     * */
+    public static String checkDate(Calendar c,int i1,int i2,boolean ringDaily)
     {
         String s="";
         if(c.get(Calendar.DAY_OF_MONTH)==Calendar.getInstance().get(Calendar.DAY_OF_MONTH))
         {
             s = getProperTag(i1) + DateFormat.getTimeInstance(DateFormat.SHORT).format(c.getTime());
         }else
+            {
+                s = getProperTag(i2)+ DateFormat.getDateInstance(DateFormat.MEDIUM).format(c.getTime());
+            }
+
+        if(ringDaily)
         {
-            s = getProperTag(i2)+ DateFormat.getDateInstance(DateFormat.MEDIUM).format(c.getTime());
+            s = getProperTag(1)+ DateFormat.getTimeInstance(DateFormat.SHORT).format(c.getTime());
         }
 
         return s;

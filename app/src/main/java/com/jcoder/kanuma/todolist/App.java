@@ -5,6 +5,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
 
+/*Creates a basic notification channel (for Android Oreo or above)*/
 public class App extends Application {
 
     public static final String REMINDER_CHANNEL_ID="reminder channel 1";

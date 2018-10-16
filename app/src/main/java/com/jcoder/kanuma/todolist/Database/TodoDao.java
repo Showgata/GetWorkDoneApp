@@ -9,6 +9,11 @@ import android.arch.persistence.room.Update;
 
 import java.util.List;
 
+/*
+* DATA ACCESS OBJECT
+* This interface contains few CRUD methods
+* */
+
 @Dao
 public interface TodoDao {
 
