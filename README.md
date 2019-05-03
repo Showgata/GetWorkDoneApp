@@ -7,5 +7,4 @@ particular todos.
 
 //This application follows the MVVM architecture pattern
 
-//It uses Room persistence library which provides
-an abstraction layer over SQL Database
+//It uses Room persistence library 
